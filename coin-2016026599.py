@@ -7,42 +7,38 @@ import os
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 import datetime
-
+import locale
 import telepot
 from telepot.loop import MessageLoop
 from pprint import pprint
 
+locale.setlocale(locale.LC_ALL, '')
 
 # fill up your code!
-
-class bithumb:
-    def __init__(self, target_coin):
-        self.target_coin = target_coin
-
-        # self.target_coin
-        # payload={'status'
-        #          ,'data':{'average_price:'}}
+def GetBTC():
+    Time=datetime.datetime.now()
+    currentTime = Time.strftime('%Y-%m-%d %H:%M')
+    print(currentTime)
+    GetBitfinex()
+    GetBithumb()
 
 
-bithumbUrl = "https://api.bithumb.com/public/ticker/BTC"
+def GetBithumb():
+    bithumbUrl = "https://api.bithumb.com/public/ticker/BTC"
+    R_bithumb = requests.post(bithumbUrl)
+    BTC_bithumb = json.loads(
+        R_bithumb.text)  # R_bithumb.text ===str , so using json.loads, convert R_bithumb.text into dict format and assign to BTC_bitnumb(===dict)
+    print("BTC KRW is ₩ %.3d from Bithumb" % float(BTC_bithumb["data"]["average_price"]))
 
-bitfinexUrl = "https://min-api.cryptocompare.com/data/price"
-bitfinexParams = {'fsym': 'BTC', 'tsyms': 'USD', 'e': 'Bitfinex'}
+def GetBitfinex():
+    bitfinexUrl = "https://min-api.cryptocompare.com/data/price"
+    bitfinexParams = {'fsym': 'BTC', 'tsyms': 'USD', 'e': 'Bitfinex'}
+    R_bitfinex = requests.post(bitfinexUrl, params=bitfinexParams)
+    BTC_bitfinex = json.loads(R_bitfinex.text)
+    print("BTC USD is $ %.3d from Bitfinex" % float(BTC_bitfinex["USD"]))
 
-R_bithumb = requests.post(bithumbUrl)
-BTC_bithumb = json.loads(
-    R_bithumb.text)  # R_bithumb.text ===str , so using json.loads, convert R_bithumb.text into dict format and assign to BTC_bitnumb(===dict)
 
-R_bitfinex = requests.post(bitfinexUrl, params=bitfinexParams)
-BTC_bitfinex = json.loads(R_bitfinex.text)
-
-######
-# if BTC_bithumb["status"] is '0000':
-#     print("something wrong in bithumb tradecenter. or illegal requests.")
-# print(BTC_bithumb["status"])
-
-print(BTC_bithumb)
-
-print(BTC_bitfinex)
-
-print("%d" % float((BTC_bithumb["data"]["average_price"])))
+if __name__ == "__main__":
+    scheduler = BlockingScheduler()
+    scheduler.add_job(GetBTC, 'interval', minutes=1)
+    scheduler.start()
