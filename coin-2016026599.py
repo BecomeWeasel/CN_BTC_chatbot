@@ -20,11 +20,10 @@ def GetBTC():
     Time = datetime.datetime.now()
     currentTime = Time.strftime('%Y-%m-%d %H:%M')
     print(currentTime)
-    USD=GetBitfinex()
-    KRW=GetBithumb()
-
-    bot.sendMessage(455389867,"{0}\nBTC KRW is ₩ {1} from Bithumb\nBTC USD is $ {2} from Bitfinex".format(currentTime,KRW,USD))
-
+    USD = GetBitfinex()
+    KRW = GetBithumb()
+    bot.sendMessage(455389867,
+                    "{0}\nBTC KRW is ₩ {1} from Bithumb\nBTC USD is $ {2} from Bitfinex".format(currentTime, KRW, USD))
 
 
 def GetBithumb():
