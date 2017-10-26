@@ -12,8 +12,6 @@ import telepot
 from telepot.loop import MessageLoop
 from pprint import pprint
 
-locale.setlocale(locale.LC_ALL, '')
-
 
 # fill up your code!
 def GetBTC():
